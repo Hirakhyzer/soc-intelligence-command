@@ -1,0 +1,22 @@
+# Keep all real security telemetry local unless explicit authorization exists.
+data/raw/
+data/interim/
+data/processed/
+
+# Generated laboratory outputs
+outputs/figures/*
+outputs/results/*
+outputs/reports/*
+!outputs/.gitkeep
+
+# Python, notebook, and environment files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
