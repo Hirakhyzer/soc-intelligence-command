@@ -8,7 +8,6 @@ exploit instructions or malicious tooling.
 from __future__ import annotations
 
 from dataclasses import dataclass
-import uuid
 
 import numpy as np
 import pandas as pd
@@ -40,7 +39,7 @@ def generate_synthetic_events(config: SyntheticSOCConfig | None = None) -> pd.Da
 
     def add(timestamp, source_type, event_type, action, status, user="", host="", src_ip="", dst_ip="", dst_host="", process_name="", parent_process="", domain="", malicious=0, scenario="benign"):
         rows.append({
-            "event_id": uuid.uuid4().hex[:18], "timestamp": timestamp, "source_type": source_type,
+            "event_id": f"EVT-{len(rows) + 1:07d}", "timestamp": timestamp, "source_type": source_type,
             "event_type": event_type, "action": action, "status": status, "user": user, "host": host,
             "src_ip": src_ip, "dst_ip": dst_ip, "dst_host": dst_host, "process_name": process_name,
             "parent_process": parent_process, "domain": domain,
