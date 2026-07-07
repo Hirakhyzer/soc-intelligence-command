@@ -22,6 +22,7 @@ from socintel.detections import run_detection_rules
 from socintel.ledger import append_record, verify_ledger
 from socintel.metrics import synthetic_alert_metrics
 from socintel.playbooks import recommend_response_steps
+from socintel.reporting import write_analyst_brief
 from socintel.schema import normalize_events
 from socintel.scoring import prioritize_alerts
 from socintel.synthetic import SyntheticSOCConfig, generate_synthetic_events
@@ -57,7 +58,7 @@ def main() -> None:
     plot_incident_graph(graph, outputs["figures"] / "synthetic_incident_correlation_graph.png")
 
     ledger_path = outputs["results"] / "audit_ledger.jsonl"
-    ledger_record = append_record(ledger_path, {
+    append_record(ledger_path, {
         "experiment": "synthetic_soc_lab",
         "seed": args.seed,
         "days": args.days,
@@ -79,6 +80,7 @@ def main() -> None:
         "response_boundary": "Recommendations require human analyst authorization; no automatic containment or account action is performed.",
     }
     (outputs["results"] / "synthetic_soc_summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
+    write_analyst_brief(outputs["reports"] / "synthetic_soc_brief.md", summary, incidents, playbooks)
     print(json.dumps(summary, indent=2, default=str))
 
 
