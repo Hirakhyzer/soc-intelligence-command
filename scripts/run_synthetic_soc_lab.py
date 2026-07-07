@@ -26,6 +26,7 @@ from socintel.reporting import write_analyst_brief
 from socintel.schema import normalize_events
 from socintel.scoring import prioritize_alerts
 from socintel.synthetic import SyntheticSOCConfig, generate_synthetic_events
+from socintel.taxonomy import add_tactic_tags
 from socintel.visualization import plot_alert_timeline, plot_alert_volume, plot_incident_graph, plot_priority_distribution
 
 
@@ -39,7 +40,7 @@ def main() -> None:
     set_seed(args.seed)
     events = normalize_events(generate_synthetic_events(SyntheticSOCConfig(days=args.days, seed=args.seed)))
     anomalies = fit_score_anomalies(build_hourly_entity_features(events), seed=args.seed)
-    detected = run_detection_rules(events)
+    detected = add_tactic_tags(run_detection_rules(events))
     enriched = attach_anomaly_evidence(detected, anomalies)
     prioritized = prioritize_alerts(enriched)
     alert_incidents, incidents, graph = correlate_alerts(prioritized)
@@ -78,6 +79,7 @@ def main() -> None:
         "incident_count": int(len(incidents)),
         "ledger": verify_ledger(ledger_path),
         "response_boundary": "Recommendations require human analyst authorization; no automatic containment or account action is performed.",
+        "taxonomy_boundary": "Tactic labels are educational MITRE-style annotations, not official coverage claims.",
     }
     (outputs["results"] / "synthetic_soc_summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
     write_analyst_brief(outputs["reports"] / "synthetic_soc_brief.md", summary, incidents, playbooks)
