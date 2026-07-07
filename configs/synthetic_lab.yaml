@@ -1,0 +1,18 @@
+seed: 42
+output_dir: outputs
+synthetic:
+  days: 14
+  include_scenarios: true
+
+detection:
+  failed_login_threshold: 6
+  failed_login_window_minutes: 30
+  lateral_auth_min_targets: 3
+  lateral_auth_window_minutes: 45
+
+correlation:
+  time_window_minutes: 90
+
+safety:
+  automated_response: false
+  data_origin_label: synthetic fictional SOC telemetry
